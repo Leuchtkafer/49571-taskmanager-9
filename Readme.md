@@ -1,7 +1,7 @@
 # Личный проект «Менеджер задач» [![Build status][travis-image]][travis-url]
 
 * Студент: [Мария Чернова](https://up.htmlacademy.ru/ecmascript/9/user/49571).
-* Наставник: `Неизвестно`.
+* Наставник: `Без наставника`.
 
 ---
 
