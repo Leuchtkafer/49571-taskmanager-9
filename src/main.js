@@ -4,7 +4,7 @@ import {filter} from './components/filter.js';
 import {sort} from './components/sort.js';
 import {task} from './components/task.js';
 import {form} from './components/form.js';
-import {loadMore} from "./components/load-more.js";
+import {buttonMore} from "./components/button-more.js";
 
 const taskNumber = 3;
 
@@ -37,4 +37,4 @@ renderComponent(boardWrapper, sort());
 renderComponent(boardTasks, form());
 renderComponent(boardTasks, renderTask(taskNumber));
 boardWrapper.append(boardTasks);
-renderComponent(boardWrapper, loadMore());
+renderComponent(boardWrapper, buttonMore());
