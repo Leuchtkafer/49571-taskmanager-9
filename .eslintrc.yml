@@ -3,4 +3,11 @@ env:
   browser: true
   commonjs: true
 
+parserOptions:
+  ecmaVersion: 6
+  sourceType: module
+
+rules:
+  eol-last: 0
+
 extends: 'htmlacademy/es6'
