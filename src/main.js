@@ -2,13 +2,13 @@ import {menu} from './components/menu.js';
 import {search} from './components/search.js';
 import {makeFilter} from './components/make-filter.js';
 import {sort} from './components/sort.js';
-import {makeTask} from './components/make-task.js';
-import {form} from './components/form.js';
 import {buttonMore} from "./components/button-more.js";
 import {getTask, getFilter} from "./data/data.js";
+import {Task} from "./components/task.js";
+import {TaskEdit} from "./components/task-edit.js";
+import {render, Position} from './utils.js';
 
-const TASK_INITIAL_COUNT = 7;
-const TASK_MAX_COUNT = 8;
+const TASK_COUNT = 3;
 
 const main = document.querySelector(`.main`);
 const menuWrapper = document.querySelector(`.main__control`);
@@ -17,42 +17,60 @@ boardWrapper.className = `board container`;
 const boardTasks = document.createElement(`div`);
 boardTasks.className = `board__tasks`;
 
-
-// функция для рендеринга компонента
-
 const renderComponent = (wrapper, html) => {
   wrapper.insertAdjacentHTML(`beforeend`, html);
 };
-
-const renderTask = (number) => {
-  const randomTasksArray = [];
-  while (randomTasksArray.length < number) {
-    randomTasksArray.push(makeTask(getTask()));
-  }
-  return randomTasksArray;
-};
-
-const allTasks = [form(), renderTask(TASK_INITIAL_COUNT)];
 
 renderComponent(menuWrapper, menu());
 renderComponent(main, search());
 renderComponent(main, makeFilter(getFilter()));
 main.append(boardWrapper);
 renderComponent(boardWrapper, sort());
-renderComponent(boardTasks, allTasks);
 boardWrapper.append(boardTasks);
-renderComponent(boardWrapper, buttonMore());
 
-const loadMore = document.querySelector(`.load-more`);
+const taskMocks = new Array(TASK_COUNT)
+.fill(``)
+.map(getTask);
 
-const loadMoreTasks = () => {
-  const allRandomTasks = document.querySelectorAll(`.card`);
-  if (allRandomTasks.length < 32) {
-    renderComponent(boardTasks, renderTask(TASK_MAX_COUNT));
-  } else {
-    loadMore.style.display = `none`;
-  }
+const renderTask = (taskMock) => {
+  const task = new Task(taskMock);
+  const taskEdit = new TaskEdit(taskMock);
+
+  const onEscKeyDown = (evt) => {
+    if (evt.key === `Escape` || evt.key === `Esc`) {
+      boardTasks.replaceChild(task.getElement(), taskEdit.getElement());
+      document.removeEventListener(`keydown`, onEscKeyDown);
+    }
+  };
+
+  task.getElement()
+  .querySelector(`.card__btn--edit`)
+  .addEventListener(`click`, () => {
+    boardTasks.replaceChild(taskEdit.getElement(), task.getElement());
+    document.addEventListener(`keydown`, onEscKeyDown);
+  });
+
+  taskEdit.getElement().querySelector(`textarea`)
+  .addEventListener(`focus`, () => {
+    document.removeEventListener(`keydown`, onEscKeyDown);
+  });
+
+  taskEdit.getElement().querySelector(`textarea`)
+  .addEventListener(`blur`, () => {
+    document.addEventListener(`keydown`, onEscKeyDown);
+  });
+
+  taskEdit.getElement()
+  .querySelector(`.card__save`)
+  .addEventListener(`click`, () => {
+    boardTasks.replaceChild(task.getElement(), taskEdit.getElement());
+    document.removeEventListener(`keydown`, onEscKeyDown);
+  });
+
+  render(boardTasks, task.getElement(), Position.BEFOREEND);
 };
 
-loadMore.addEventListener(`click`, loadMoreTasks);
+taskMocks.forEach((taskMock) => renderTask(taskMock));
+
+renderComponent(boardWrapper, buttonMore());
 
