@@ -1,13 +1,14 @@
 import {createElement} from '../utils.js';
 
 export class Task {
-  constructor({description, dueDate, tags, color, repeatingDays}) {
+  constructor({description, dueDate, tags, color, repeatingDays, isArchive}) {
     this._description = description;
     this._dueDate = new Date(dueDate);
     this._tags = tags;
     this._color = color;
     this._element = null;
     this._repeatingDays = repeatingDays;
+    this._isArchive = isArchive;
   }
   getElement() {
     if (!this._element) {
@@ -24,7 +25,7 @@ export class Task {
                   <button type="button" class="card__btn card__btn--edit">
                     edit
                   </button>
-                  <button type="button" class="card__btn card__btn--archive">
+                  <button type="button" class="card__btn ${this._isArchive ? `card__btn--archive` : ``}">
                     archive
                   </button>
                   <button

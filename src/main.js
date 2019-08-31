@@ -8,7 +8,7 @@ import {Task} from "./components/task.js";
 import {TaskEdit} from "./components/task-edit.js";
 import {render, Position} from './utils.js';
 
-const TASK_COUNT = 3;
+const TASK_COUNT = 0;
 
 const main = document.querySelector(`.main`);
 const menuWrapper = document.querySelector(`.main__control`);
@@ -16,6 +16,7 @@ const boardWrapper = document.createElement(`section`);
 boardWrapper.className = `board container`;
 const boardTasks = document.createElement(`div`);
 boardTasks.className = `board__tasks`;
+const textNoTasks = `<p class="board__no-tasks">Congratulations, all tasks were completed! To create a new click on«add new task» button.</p>`;
 
 const renderComponent = (wrapper, html) => {
   wrapper.insertAdjacentHTML(`beforeend`, html);
@@ -69,6 +70,16 @@ const renderTask = (taskMock) => {
 
   render(boardTasks, task.getElement(), Position.BEFOREEND);
 };
+
+function isArchiveTasksArray() {
+  taskMocks.every((it) => {
+    return it.isArchive === true;
+  });
+}
+
+if (taskMocks.length === 0 || isArchiveTasksArray()) {
+  renderComponent(boardWrapper, textNoTasks);
+}
 
 taskMocks.forEach((taskMock) => renderTask(taskMock));
 

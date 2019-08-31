@@ -29,7 +29,7 @@ const getTask = () => ({
     `pink`][Math.floor(Math.random() * 5)],
   isRepeating: true,
   isFavorite: true,
-  isArchive: false,
+  isArchive: true,
 });
 
 const getFilterCount = () => {
