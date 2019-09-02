@@ -1,7 +1,6 @@
 import {menu} from './components/menu.js';
 import {search} from './components/search.js';
 import {makeFilter} from './components/make-filter.js';
-import {sort} from './components/sort.js';
 import {getTask, getFilter} from './data/data.js';
 import {BoardController} from './components/board-cotroller.js';
 
@@ -23,7 +22,6 @@ renderComponent(menuWrapper, menu());
 renderComponent(main, search());
 renderComponent(main, makeFilter(getFilter()));
 main.append(boardWrapper);
-renderComponent(boardWrapper, sort());
 boardWrapper.append(boardTasks);
 
 const taskMocks = new Array(TASK_COUNT)
