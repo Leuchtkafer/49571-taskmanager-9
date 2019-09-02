@@ -20,12 +20,6 @@ const render = (container, element, place) => {
   }
 };
 
-const unrender = (element) => {
-  if (element) {
-    element.remove();
-  }
-};
-
-export {Position, createElement, render, unrender};
+export {Position, createElement, render};
 
 
