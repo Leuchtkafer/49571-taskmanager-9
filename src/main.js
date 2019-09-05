@@ -2,7 +2,7 @@ import {menu} from './components/menu.js';
 import {search} from './components/search.js';
 import {makeFilter} from './components/make-filter.js';
 import {getTask, getFilter} from './data/data.js';
-import {BoardController} from './components/board-cotroller.js';
+import {BoardController} from './controllers/board.js';
 
 const TASK_COUNT = 3;
 

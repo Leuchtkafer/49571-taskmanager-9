@@ -27,9 +27,15 @@ const getTask = () => ({
     `blue`,
     `green`,
     `pink`][Math.floor(Math.random() * 5)],
-  isRepeating: true,
-  isFavorite: true,
-  isArchive: true,
+  colors: [
+    `black`,
+    `yellow`,
+    `blue`,
+    `green`,
+    `pink`],
+  isFavorite: Boolean(Math.round(Math.random())),
+  isArchive: Boolean(Math.round(Math.random())),
+  isDate: true,
 });
 
 const getFilterCount = () => {
