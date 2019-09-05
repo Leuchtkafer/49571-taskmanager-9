@@ -3,6 +3,11 @@ const Position = {
   BEFOREEND: `beforeend`
 };
 
+const Key = {
+  ESCAPE_IE: `Escape`,
+  ESCAPE: `Esc`,
+};
+
 const createElement = (template) => {
   const newElement = document.createElement(`div`);
   newElement.innerHTML = template;
@@ -20,6 +25,12 @@ const render = (container, element, place) => {
   }
 };
 
-export {Position, createElement, render};
+const unrender = (element) => {
+  if (element) {
+    element.remove();
+  }
+};
+
+export {Position, createElement, render, unrender, Key};
 
 
