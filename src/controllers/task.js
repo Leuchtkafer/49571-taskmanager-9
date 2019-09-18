@@ -1,6 +1,7 @@
 import {Task} from '../components/task';
 import {TaskEdit} from '../components/task-edit';
 import {render, Position, Key} from '../utils';
+import '../../node_modules/flatpickr/dist/flatpickr.min.css';
 import flatpickr from 'flatpickr';
 
 export class TaskController {
