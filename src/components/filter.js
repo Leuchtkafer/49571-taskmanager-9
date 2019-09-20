@@ -1,5 +1,9 @@
-export const makeFilter = (filters, isChecked = false, isDisabled = false) =>
-  `<section class="main__filter filter container">
+import {AbstractComponent} from './absctract-component.js';
+import {filters} from '../data/data.js';
+
+export class Filter extends AbstractComponent {
+  getTemplate(isChecked = false, isDisabled = false) {
+    return `<section class="main__filter filter container">
     ${filters.map((filter) => (
     `<input 
       type="radio" 
@@ -13,3 +17,5 @@ export const makeFilter = (filters, isChecked = false, isDisabled = false) =>
       ${filter.title} <span class="filter__${filter.title}-count">${filter.count}</span>
     </label>`.trim())).join(``)}
   </section>`;
+  }
+}

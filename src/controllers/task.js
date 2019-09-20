@@ -1,22 +1,38 @@
 import {Task} from '../components/task';
 import {TaskEdit} from '../components/task-edit';
-import {render, Position, Key} from '../utils';
+import {render, Position} from '../utils';
 import '../../node_modules/flatpickr/dist/flatpickr.min.css';
 import flatpickr from 'flatpickr';
 
+export const Mode = {
+  ADDING: `adding`,
+  DEFAULT: `default`,
+};
+
 export class TaskController {
-  constructor(container, data, onChangeView, onDataChange) {
+  constructor(container, data, mode, onChangeView, onDataChange) {
     this._container = container;
+
     this._data = data;
+    this._taskView = new Task(this._data);
+    this._taskEdit = new TaskEdit(this._data);
+
     this._onChangeView = onChangeView;
     this._onDataChange = onDataChange;
-    this._taskView = new Task(data);
-    this._taskEdit = new TaskEdit(data);
 
-    this.create();
+    this.create(mode);
+
   }
 
-  create() {
+  create(mode) {
+    let renderPosition = Position.BEFOREEND;
+    let currentView = this._taskView;
+
+    if (mode === Mode.ADDING) {
+      renderPosition = Position.AFTERBEGIN;
+      currentView = this._taskEdit;
+    }
+
     flatpickr(this._taskEdit.getElement().querySelector(`.card__date`), {
       altInput: true,
       allowInput: true,
@@ -24,8 +40,18 @@ export class TaskController {
     });
 
     const onEscKeyDown = (evt) => {
-      if (evt.key === Key.ESCAPE || evt.key === Key.ESCAPE_IE) {
-        this._container.getElement().replaceChild(this._taskView.getElement(), this._taskEdit.getElement());
+      if (evt.key === `Escape` || evt.key === `Esc`) {
+        if (mode === Mode.DEFAULT) {
+          if (this._container.getElement().contains(this._taskEdit.getElement())) {
+            this._container.getElement().replaceChild(this._taskView.getElement(), this._taskEdit.getElement());
+          }
+        } else if (mode === Mode.ADDING) {
+          this._container.getElement().removeChild(currentView.getElement());
+
+          // Захотели создать карточку, но не стали ее сохранять
+          this._onDataChange(null, null);
+        }
+
         document.removeEventListener(`keydown`, onEscKeyDown);
       }
     };
@@ -39,7 +65,6 @@ export class TaskController {
     .addEventListener(`blur`, () => {
       document.addEventListener(`keydown`, onEscKeyDown);
     });
-
 
     this._taskView.getElement().querySelector(`.card__btn--edit`).addEventListener(`click`, (evt) => {
       evt.preventDefault();
@@ -59,8 +84,8 @@ export class TaskController {
 
     this._taskEdit.getElement()
     .querySelector(`.card__save`)
-    .addEventListener(`click`, () => {
-
+    .addEventListener(`click`, (evt) => {
+      evt.preventDefault();
       const formData = new FormData(this._taskEdit.getElement().querySelector(`.card__form`));
 
       const entry = {
@@ -79,16 +104,20 @@ export class TaskController {
           'fr': false,
           'sa': false,
           'su': false,
-        }),
-        isRepeat: formData.getAll(`repeat`).some((it) => it)
+        })
       };
 
-      this._onDataChange(entry, this._data);
+      this._onDataChange(entry, mode === Mode.DEFAULT ? this._data : null);
 
       document.removeEventListener(`keydown`, onEscKeyDown);
     });
 
-    render(this._container.getElement(), this._taskView.getElement(), Position.BEFOREEND);
+    this._taskEdit.getElement().querySelector(`.card__delete`)
+    .addEventListener(`click`, () => {
+      this._onDataChange(null, this._data);
+    });
+
+    render(this._container, currentView.getElement(), renderPosition);
   }
 
   setDefaultView() {

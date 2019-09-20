@@ -38,40 +38,35 @@ const getTask = () => ({
   isDate: true,
 });
 
-const getFilterCount = () => {
-  let amount = 0;
-  return amount;
-};
-
-const getFilter = () => [
+const filters = [
   {
     title: `all`,
-    count: getFilterCount(),
+    count: 0,
   },
   {
     title: `overdue`,
-    count: getFilterCount(),
+    count: 0,
   },
   {
     title: `today`,
-    count: getFilterCount(),
+    count: 0,
   },
   {
     title: `favorites`,
-    count: getFilterCount(),
+    count: 0,
   },
   {
     title: `repeating`,
-    count: getFilterCount(),
+    count: 0,
   },
   {
     title: `tags`,
-    count: getFilterCount(),
+    count: 0,
   },
   {
     title: `archive`,
-    count: getFilterCount(),
+    count: 5,
   },
 ];
 
-export {getTask, getFilter};
+export {getTask, filters};
