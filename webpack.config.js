@@ -2,7 +2,7 @@ const path = require(`path`);
 
 module.exports = {
   mode: `development`,
-  entry: `./src/main.js`,
+  entry: `../src/main.js`,
   output: {
     filename: `bundle.js`,
     path: path.join(__dirname, `public`)
@@ -10,10 +10,6 @@ module.exports = {
   devtool: `source-map`,
   module: {
     rules: [
-      {
-        test: /\.styl$/,
-        loader: `css-loader!stylus-loader?paths=node_modules/bootstrap-stylus/stylus/`
-      },
       {
         test: /\.css$/i,
         use: [`style-loader`, `css-loader`],

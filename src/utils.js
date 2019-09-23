@@ -31,6 +31,8 @@ const unrender = (element) => {
   }
 };
 
-export {Position, createElement, render, unrender, Key};
+const getRandom = () => Math.floor(Math.random() * 10);
+
+export {Position, createElement, render, unrender, Key, getRandom};
 
 

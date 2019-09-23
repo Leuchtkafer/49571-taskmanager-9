@@ -42,11 +42,11 @@ export class TaskController {
     const onEscKeyDown = (evt) => {
       if (evt.key === `Escape` || evt.key === `Esc`) {
         if (mode === Mode.DEFAULT) {
-          if (this._container.getElement().contains(this._taskEdit.getElement())) {
-            this._container.getElement().replaceChild(this._taskView.getElement(), this._taskEdit.getElement());
+          if (this._container.contains(this._taskEdit.getElement())) {
+            this._container.replaceChild(this._taskView.getElement(), this._taskEdit.getElement());
           }
         } else if (mode === Mode.ADDING) {
-          this._container.getElement().removeChild(currentView.getElement());
+          this._container.removeChild(currentView.getElement());
 
           // Захотели создать карточку, но не стали ее сохранять
           this._onDataChange(null, null);
@@ -69,7 +69,7 @@ export class TaskController {
     this._taskView.getElement().querySelector(`.card__btn--edit`).addEventListener(`click`, (evt) => {
       evt.preventDefault();
       this._onChangeView();
-      this._container.getElement().replaceChild(this._taskEdit.getElement(), this._taskView.getElement());
+      this._container.replaceChild(this._taskEdit.getElement(), this._taskView.getElement());
 
       document.addEventListener(`keydown`, onEscKeyDown);
     });
@@ -79,7 +79,7 @@ export class TaskController {
     .querySelector(`.card__form`)
     .addEventListener(`submit`, (evt) => {
       evt.preventDefault();
-      this._container.getElement().replaceChild(this._taskView.getElement(), this._taskEdit.getElement());
+      this._container.replaceChild(this._taskView.getElement(), this._taskEdit.getElement());
     });
 
     this._taskEdit.getElement()
@@ -121,8 +121,8 @@ export class TaskController {
   }
 
   setDefaultView() {
-    if (this._container.getElement().contains(this._taskEdit.getElement())) {
-      this._container.getElement().replaceChild(this._taskView.getElement(), this._taskEdit.getElement());
+    if (this._container.contains(this._taskEdit.getElement())) {
+      this._container.replaceChild(this._taskView.getElement(), this._taskEdit.getElement());
     }
   }
 }

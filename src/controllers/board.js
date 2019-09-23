@@ -5,7 +5,7 @@ import {TaskListController} from '../controllers/task-list';
 import {ButtonMore} from '../components/button-more';
 import {unrender, render, Position} from '../utils';
 
-const TASKS_IN_ROW = 4;
+const TASKS_IN_ROW = 10;
 
 export class BoardController {
   constructor(container, onDataChange) {
@@ -13,7 +13,7 @@ export class BoardController {
     this._onDataChangeMain = onDataChange;
     this._tasks = [];
 
-    this._showedTasks = TASKS_IN_ROW;
+    this._showedTasks = null;
 
     this._board = new Board();
     this._loadMoreButton = new ButtonMore();
