@@ -1,36 +1,32 @@
 import {SiteMenu} from './components/site-menu.js';
 import {Search} from './components/search.js';
-import {Statistics} from './components/statistics.js';
+import {Statistic} from './components/statistic.js';
 import {Filter} from './components/filter.js';
-import {getTask} from './data/data.js';
 import {BoardController} from './controllers/board.js';
 import {SearchController} from './controllers/search.js';
 import {render, Position} from './utils.js';
-
-const TASK_COUNT = 3;
+import {allTasks, filters} from './data/data';
 
 const main = document.querySelector(`.main`);
 const menuWrapper = document.querySelector(`.main__control`);
 const textNoTasks = `<p class="board__no-tasks">Congratulations, all tasks were completed! To create a new click on«add new task» button.</p>`;
-const statistics = new Statistics();
+const statistic = new Statistic();
 const siteMenu = new SiteMenu();
 const search = new Search();
-const filter = new Filter();
-let taskMocks = new Array(TASK_COUNT)
-.fill(``)
-.map(getTask);
+const filter = new Filter(filters);
+let taskMocks = allTasks;
 
 const onDataChange = (tasks) => {
   taskMocks = tasks;
 };
 
-statistics.getElement().classList.add(`visually-hidden`);
+statistic.getElement().classList.add(`visually-hidden`);
 
 render(menuWrapper, siteMenu.getElement(), Position.BEFOREEND);
 render(main, menuWrapper, Position.BEFOREEND);
 render(main, search.getElement(), Position.BEFOREEND);
 render(main, filter.getElement(), Position.BEFOREEND);
-render(main, statistics.getElement(), Position.BEFOREEND);
+render(main, statistic.getElement(), Position.BEFOREEND);
 
 function isArchiveTasksArray() {
   taskMocks.every((it) => {
@@ -43,16 +39,14 @@ if (taskMocks.length === 0 || isArchiveTasksArray()) {
 }
 
 const taskListController = new BoardController(main, onDataChange);
+taskListController.show(taskMocks);
 
 const onSearchBackButtonClick = () => {
-  statistics.getElement().classList.add(`visually-hidden`);
+  statistic.getElement().classList.add(`visually-hidden`);
   searchController.hide();
   taskListController.show(taskMocks);
 };
 const searchController = new SearchController(main, search, onSearchBackButtonClick);
-
-taskListController.show(taskMocks);
-
 
 siteMenu.getElement().addEventListener(`change`, (evt) => {
   evt.preventDefault();
@@ -71,12 +65,12 @@ siteMenu.getElement().addEventListener(`change`, (evt) => {
 
   switch (evt.target.id) {
     case tasksId:
-      statistics.getElement().classList.add(`visually-hidden`);
+      statistic.hide();
       taskListController.show(taskMocks);
       break;
     case statisticId:
       taskListController.hide();
-      statistics.getElement().classList.remove(`visually-hidden`);
+      statistic.show(taskMocks);
       break;
     case newTaskId:
       taskListController.createTask();
@@ -86,8 +80,7 @@ siteMenu.getElement().addEventListener(`change`, (evt) => {
 });
 
 search.getElement().addEventListener(`click`, () => {
-  statistics.getElement().classList.add(`visually-hidden`);
+  statistic.hide();
   taskListController.hide();
   searchController.show(taskMocks);
 });
-
