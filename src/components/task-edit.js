@@ -10,9 +10,8 @@ export class TaskEdit extends AbstractComponent {
     this._repeatingDays = repeatingDays;
     this._isFavorite = isFavorite || false;
     this._isArchive = isArchive || false;
-    this._isRepeat = Object.values(this._repeatingDays).some((it) => it);
+    this._isRepeat = Object.values(this._repeatingDays).some((it) => it) || null;
     this._isDate = isDate;
-
     this._subscribeOnEvents();
   }
 
