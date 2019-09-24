@@ -4,8 +4,13 @@ import {Statistic} from './components/statistic.js';
 import {Filter} from './components/filter.js';
 import {BoardController} from './controllers/board.js';
 import {SearchController} from './controllers/search.js';
+import {API} from './server/api.js';
 import {render, Position} from './utils.js';
 import {allTasks, filters} from './data/data';
+
+const AUTHORIZATION = `Basic dXNlckBwYXNzd29yZAo=${Math.random()}`;
+const END_POINT = `https://htmlacademy-es-9.appspot.com/task-manager`;
+const api = new API({endPoint: END_POINT, authorization: AUTHORIZATION});
 
 const main = document.querySelector(`.main`);
 const menuWrapper = document.querySelector(`.main__control`);
@@ -15,10 +20,6 @@ const siteMenu = new SiteMenu();
 const search = new Search();
 const filter = new Filter(filters);
 let taskMocks = allTasks;
-
-const onDataChange = (tasks) => {
-  taskMocks = tasks;
-};
 
 statistic.getElement().classList.add(`visually-hidden`);
 
@@ -38,13 +39,34 @@ if (taskMocks.length === 0 || isArchiveTasksArray()) {
   render(main, textNoTasks);
 }
 
-const taskListController = new BoardController(main, onDataChange);
-taskListController.show(taskMocks);
+const onDataChange = (actionType, update) => {
+  switch (actionType) {
+    case `update`:
+      api.updateTask({
+        id: update.id,
+        data: update.toRAW()
+      }).then((tasks) => boardController.show(tasks));
+      break;
+    case `delete`:
+      api.updateTask({
+        id: update.id
+      })
+      .then(() => api.getTasks())
+      .then((tasks) => boardController.show(tasks));
+      break;
+  }
+};
+
+const boardController = new BoardController(main, onDataChange);
+
+api.getTasks().then((tasks) => {
+  boardController.show(tasks);
+});
 
 const onSearchBackButtonClick = () => {
   statistic.getElement().classList.add(`visually-hidden`);
   searchController.hide();
-  taskListController.show(taskMocks);
+  boardController.show(taskMocks);
 };
 const searchController = new SearchController(main, search, onSearchBackButtonClick);
 
@@ -66,14 +88,14 @@ siteMenu.getElement().addEventListener(`change`, (evt) => {
   switch (evt.target.id) {
     case tasksId:
       statistic.hide();
-      taskListController.show(taskMocks);
+      boardController.show(taskMocks);
       break;
     case statisticId:
-      taskListController.hide();
+      boardController.hide();
       statistic.show(taskMocks);
       break;
     case newTaskId:
-      taskListController.createTask();
+      boardController.createTask();
       siteMenu.getElement().querySelector(`#${tasksId}`).checked = true;
       break;
   }
@@ -81,6 +103,6 @@ siteMenu.getElement().addEventListener(`change`, (evt) => {
 
 search.getElement().addEventListener(`click`, () => {
   statistic.hide();
-  taskListController.hide();
+  boardController.hide();
   searchController.show(taskMocks);
 });
